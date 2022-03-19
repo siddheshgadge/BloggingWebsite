@@ -1,0 +1,52 @@
+<% layout('layouts/boilerplate')%>
+<div class="row">
+  <div class="col-8">
+    <div class="card mb-5" style="width: auto;">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><h5 class="card-title"><%= blog.title %></h5></li>
+          <li class="list-group-item"><h6 class="card-subtitle mb-2 text-muted"><%= blog.subtitle %></h6></li>
+          <li class="list-group-item text-muted">Created by <cite><%= blog.author.username%></cite></li>
+          <li class="list-group-item"><p class="card-text"><%= blog.description %></p></li>
+          <div class="card-footer text-muted mb-3">
+            <%= moment(blog.createdAt).fromNow() %>
+          </div>
+        </ul>
+      </div>
+      <% if(currentUser && blog.author.equals(currentUser._id)){ %>
+        <form action="/blogs/<%= blog._id %>?_method=DELETE" class="mx-2" method="POST">
+          <a class="btn btn-primary mb-3" href="/blogs/<%=blog._id%>/edit">Edit</a>
+          <button class="btn btn-danger mb-3">DELETE</button>
+          <a class="btn btn-dark mb-3" href="/blogs">Back</a>
+        </form>
+      <%}%>
+    </div>
+  </div>
+  <div class="col-4">
+    <% if(currentUser){ %>
+    <h4 class="mx-3">Leave a comment here!</h4>
+  <form action="/blogs/<%= blog._id %>/comments" method="POST" class="mx-3 validate-form" novalidate>
+    <div class="form-floating mb-3">
+      <textarea class="form-control" name="comment[body]" placeholder="Leave a comment here" id="floatingTextarea" required></textarea>
+      <label for="floatingTextarea" class="mx-3">Comments</label>
+      <button class="btn btn-success my-3">POST</button>
+    </div>
+  </form>
+  <%}%>
+  <div class="card">
+    <div class="card-body mb-5" style="overflow:scroll; height:500px;"><% if(!currentUser){ %><h4 class="text-center">Comments</h4><%}%>
+      <% for(let comment of blog.comments){ %>
+      <h5 class="card-title"><%= comment.author.username %></h5>
+      <p class="card-text"><%= comment.body %></p>
+      <% if(currentUser && comment.author.equals(currentUser._id)){ %>
+      <form action="/blogs/<%= blog._id%>/comments/<%= comment._id%>?_method=DELETE" method="POST">
+        <button class="btn btn-sm btn-danger mb-2">DELETE</button>
+      </form>
+      <%}%>
+      <%}%>
+    </div>
+  </div> 
+</div>
+  </div>
+</div>
+
