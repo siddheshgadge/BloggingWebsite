@@ -101,7 +101,7 @@ app.use('/blogs',blogRoutes);
 app.use('/blogs/:id/comments',commentRoutes);
 
 app.get('/', (req,res) => {
-	res.render('Home');
+	res.render('home');
 })
 
 app.all('*',(req, res, next) => {
